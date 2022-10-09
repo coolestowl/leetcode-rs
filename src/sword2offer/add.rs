@@ -1,35 +1,5 @@
 use std::collections::HashMap;
 
-pub fn add<T>(a: T, b: T) -> T
-where
-    T: std::ops::Add<Output = T>,
-{
-    a + b
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_add() {
-        assert_eq!(add(1, 2), 3);
-        assert_eq!(add(1.0, 2.0), 3.0);
-    }
-
-    #[test]
-    fn test_hhh() {
-    }
-
-    #[test]
-    fn test_find_repeat_number() {
-        assert_eq!(Solution::find_repeat_number(vec![2, 3, 1, 0, 2, 5, 3]), 2);
-    }
-}
-
-struct Solution {
-}
-
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
@@ -44,6 +14,9 @@ impl ListNode {
             val
         }
     }
+}
+
+struct Solution {
 }
 
 impl Solution {
@@ -131,5 +104,15 @@ impl Solution {
             (None, Some(n2)) => Some(n2),
             _ => None,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_find_repeat_number() {
+        assert_eq!(Solution::find_repeat_number(vec![2, 3, 1, 0, 2, 5, 3]), 2);
     }
 }
