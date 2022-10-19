@@ -1,5 +1,4 @@
 use std::{collections::HashMap, fmt::format, str::FromStr};
-use num_bigint::BigUint;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -108,7 +107,43 @@ impl Solution {
     }
 
     pub fn add_binary(a: String, b: String) -> String {
-        (BigUint::parse_bytes(a.as_bytes(), 2).unwrap() + BigUint::parse_bytes(b.as_bytes(), 2).unwrap()).to_str_radix(2)
+        // (BigUint::parse_bytes(a.as_bytes(), 2).unwrap() + BigUint::parse_bytes(b.as_bytes(), 2).unwrap()).to_str_radix(2)
+
+        let mut u8s = [a, b].iter().map(|x| {
+            (0..x.len())
+                .step_by(7)
+                .map(|i| u8::from_str_radix(&x[x.len().checked_sub(i+7).unwrap_or(0)..x.len()-i], 2).unwrap())
+                .collect::<Vec<u8>>()
+        }).collect::<Vec<Vec<u8>>>();
+        
+        u8s.sort_by(|a, b| b.len().cmp(&a.len()));
+
+        let (mut a, b) = (u8s[0].to_owned(), u8s[1].to_owned());
+
+        let _ = b.iter()
+            .enumerate()
+            .map(|(i, x)| {
+                a[i] += x;
+                if a[i] > 127 {
+                    a[i] -= 128;
+                    if i+1 >= a.len() {
+                        a.push(0);
+                    }
+                    a[i+1] += 1;
+                }
+            })
+            .count();
+
+        let result: String = a.iter()
+            .rev()
+            .map(|x| format!("{:07b}", x))
+            .collect::<Vec<String>>().join("").trim_start_matches('0').into();
+        
+        if result.len() == 0 {
+            "0".into()
+        } else {
+            result
+        }
     }
 }
 
@@ -123,6 +158,6 @@ mod tests {
 
     #[test]
     fn test_add_binary() {
-        assert_eq!(Solution::add_binary("1010".into(), "1011".into()).as_str(), "10101");
+        assert_eq!(Solution::add_binary("10111111111".into(), "010101".into()).as_str(), "101101010100");
     }
 }
