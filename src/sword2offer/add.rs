@@ -1,4 +1,5 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::format, str::FromStr};
+use num_bigint::BigUint;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -105,6 +106,10 @@ impl Solution {
             _ => None,
         }
     }
+
+    pub fn add_binary(a: String, b: String) -> String {
+        (BigUint::parse_bytes(a.as_bytes(), 2).unwrap() + BigUint::parse_bytes(b.as_bytes(), 2).unwrap()).to_str_radix(2)
+    }
 }
 
 #[cfg(test)]
@@ -114,5 +119,10 @@ mod tests {
     #[test]
     fn test_find_repeat_number() {
         assert_eq!(Solution::find_repeat_number(vec![2, 3, 1, 0, 2, 5, 3]), 2);
+    }
+
+    #[test]
+    fn test_add_binary() {
+        assert_eq!(Solution::add_binary("1010".into(), "1011".into()).as_str(), "10101");
     }
 }
