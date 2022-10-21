@@ -180,6 +180,68 @@ impl Solution {
 
         std::cmp::min(a, b)
     }
+
+    pub fn pivot_index(nums: Vec<i32>) -> i32 {
+        let (mut ptr, mut left, mut right) = (0, 0, nums.iter().skip(1).sum::<i32>());
+
+        while ptr < nums.len() {
+            match (left, right) {
+                _ if left == right => return ptr as i32,
+                _ if ptr + 1 == nums.len() => break,
+                _ => {
+                    left += nums[ptr];
+                    ptr += 1;
+                    right -= nums[ptr];
+                },
+            }
+        }
+
+        -1
+    }
+
+    pub fn is_palindrome(s: String) -> bool {
+        let chars: Vec<char> = s.chars().filter(|&x| x.is_alphanumeric()).map(|x| x.to_ascii_lowercase()).collect();
+
+        let (mut left, mut right) = (0, chars.len());
+
+        while left < right {
+            if chars[left] != chars[right-1] {
+                return false;
+            }
+
+            left += 1;
+            right -= 1;
+        }
+
+        true
+    }
+
+    pub fn valid_palindrome(s: String) -> bool {
+        let chars = s.chars().collect::<Vec<char>>();
+        Self::valid_palindrome_inner(&chars[..], 1)
+    }
+
+    pub fn valid_palindrome_inner(slice: &[char], tolerance_times: usize) -> bool {
+        let (mut l, mut r) = (0, slice.len());
+
+            while l < r {
+                match (slice[l], slice[r-1]) {
+                    (a, b) if a == b => {
+                        l += 1;
+                        r -= 1;
+                    },
+                    _ => {
+                        if tolerance_times == 0 {
+                            return false;
+                        }
+                        return Self::valid_palindrome_inner(&slice[l+1..r], tolerance_times-1)
+                            || Self::valid_palindrome_inner(&slice[l..r-1], tolerance_times-1);
+                    },
+                }
+            }
+
+            true
+    }
 }
 
 #[cfg(test)]
@@ -194,5 +256,10 @@ mod tests {
     #[test]
     fn test_add_binary() {
         assert_eq!(Solution::add_binary("10111111111".into(), "010101".into()).as_str(), "101101010100");
+    }
+
+    #[test]
+    fn test_pivot_index() {
+        assert_eq!(Solution::pivot_index(vec![1, 2, 3, 4, 5]), -1);
     }
 }
