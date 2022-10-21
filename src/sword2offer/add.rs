@@ -1,3 +1,4 @@
+use core::num;
 use std::{collections::HashMap, fmt::format, str::FromStr};
 
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -120,6 +121,9 @@ impl Solution {
 
         let (mut a, b) = (u8s[0].to_owned(), u8s[1].to_owned());
 
+        let u31_max = u32::MAX >> 1;
+        println!("{:?}", u31_max);
+
         let _ = b.iter()
             .enumerate()
             .map(|(i, x)| {
@@ -144,6 +148,37 @@ impl Solution {
         } else {
             result
         }
+    }
+
+    pub fn two_sum_bak(numbers: Vec<i32>, target: i32) -> Vec<i32> {
+        let (mut idx_1, mut idx_2) = (0, numbers.len()-1);
+
+        while idx_1 < idx_2 {
+            let sum = numbers[idx_1] + numbers[idx_2];
+            if sum == target {
+                return vec![idx_1 as i32, idx_2 as i32];
+            }
+
+            if sum < target {
+                idx_1 += 1;
+            } else {
+                idx_2 -= 1;
+            }
+        }
+
+        vec![idx_1 as i32, idx_2 as i32]
+    }
+
+    pub fn min_cost_climbing_stairs(cost: Vec<i32>) -> i32 {
+        let (mut a, mut b) = (cost[0], cost[1]);
+
+        for v in cost.into_iter().skip(2) {
+            let tmp = b;
+            b = std::cmp::min(a, b) + v;
+            a = tmp;
+        }
+
+        std::cmp::min(a, b)
     }
 }
 
