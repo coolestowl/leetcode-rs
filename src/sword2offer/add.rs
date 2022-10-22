@@ -242,6 +242,20 @@ impl Solution {
 
             true
     }
+
+    pub fn single_number(nums: Vec<i32>) -> i32 {
+        let mut result = 0_i32;
+
+        for i in 0..32 {
+            let mut sum = 0_i32;
+            for num in nums.iter() {
+                sum += (num >> i) & 1;
+            }
+            result |= (sum % 3) << i;
+        }
+        
+        result
+    }
 }
 
 #[cfg(test)]
@@ -261,5 +275,11 @@ mod tests {
     #[test]
     fn test_pivot_index() {
         assert_eq!(Solution::pivot_index(vec![1, 2, 3, 4, 5]), -1);
+    }
+
+    #[test]
+    fn test_single_number() {
+        assert_eq!(Solution::single_number(vec![2, 2, 2, 3]), 3);
+        assert_eq!(Solution::single_number(vec![0, 1, 0, 1, 0, 1, 99]), 99);
     }
 }
