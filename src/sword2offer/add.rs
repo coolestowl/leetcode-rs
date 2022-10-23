@@ -1,5 +1,5 @@
 use core::num;
-use std::{collections::HashMap, fmt::format, str::FromStr};
+use std::{collections::{HashMap, HashSet}, fmt::format, str::FromStr};
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -256,6 +256,32 @@ impl Solution {
         
         result
     }
+
+    pub fn max_product(words: Vec<String>) -> i32 {
+        let have_common = |a: &String, b: &String| -> bool {
+            let mut a_bin = 0;
+            for v in a.bytes() {
+                a_bin |= 1 << (v - 'a' as u8);
+            }
+
+            let mut b_bin = 0;
+            for v in b.bytes() {
+                b_bin |= 1 << (v - 'a' as u8);
+            }
+
+            a_bin & b_bin > 0
+        };
+
+        let mut max_result = 0;
+        for a in words.iter() {
+            for b in words.iter() {
+                if !have_common(a, b) {
+                    max_result = std::cmp::max(max_result, a.len()*b.len());
+                }
+            }
+        }
+        max_result as i32
+    }
 }
 
 #[cfg(test)]
@@ -281,5 +307,10 @@ mod tests {
     fn test_single_number() {
         assert_eq!(Solution::single_number(vec![2, 2, 2, 3]), 3);
         assert_eq!(Solution::single_number(vec![0, 1, 0, 1, 0, 1, 99]), 99);
+    }
+
+    #[test]
+    fn test_max_product() {
+        assert_eq!(Solution::max_product(vec!["eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"].iter().map(|&x| String::from(x)).collect::<Vec<String>>()), 15);
     }
 }
