@@ -1,5 +1,5 @@
 use core::num;
-use std::{collections::{HashMap, HashSet}, fmt::format, str::FromStr};
+use std::{collections::{HashMap, HashSet}, fmt::format, str::FromStr, process::id};
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -282,6 +282,48 @@ impl Solution {
         }
         max_result as i32
     }
+
+    pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut result = Vec::new();
+
+        if nums.len() < 3 {
+            return result;
+        }
+
+        let mut sorted_nums = nums.clone();
+        sorted_nums.sort_unstable();
+
+        let mut last_one = sorted_nums[0]-1;
+        for idx in 0..(sorted_nums.len()-2) {
+            if sorted_nums[idx] == last_one {
+                continue;
+            }
+            last_one = sorted_nums[idx];
+
+            let (mut left, mut right) = (idx + 1, sorted_nums.len()-1);
+            while left < right {
+                match last_one + sorted_nums[left] + sorted_nums[right] {
+                    n if n > 0 => right -= 1,
+                    n if n < 0 => left += 1,
+                    _ => {
+                        result.push(vec![last_one, sorted_nums[left], sorted_nums[right]]);
+
+                        let the_left = sorted_nums[left];
+                        while left < sorted_nums.len() && sorted_nums[left] == the_left {
+                            left += 1;
+                        }
+
+                        let the_right = sorted_nums[right];
+                        while right > idx && sorted_nums[right] == the_right {
+                            right -= 1;
+                        }
+                    },
+                }
+            }
+        }
+
+        result
+    }
 }
 
 #[cfg(test)]
@@ -312,5 +354,10 @@ mod tests {
     #[test]
     fn test_max_product() {
         assert_eq!(Solution::max_product(vec!["eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"].iter().map(|&x| String::from(x)).collect::<Vec<String>>()), 15);
+    }
+
+    #[test]
+    fn test_three_sum() {
+        assert_eq!(Solution::three_sum(vec![-1,0,1,2,-1,-4]), vec![vec![-1,-1,2], vec![-1, 0, 1]]);
     }
 }
