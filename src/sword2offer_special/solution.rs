@@ -1,20 +1,7 @@
-use core::num;
-use std::{collections::{HashMap, HashSet}, fmt::format, str::FromStr, process::id};
-
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
     pub next: Option<Box<ListNode>>
-}
-
-impl ListNode {
-    #[inline]
-    fn new(val: i32) -> Self {
-        ListNode {
-            next: None,
-            val
-        }
-    }
 }
 
 struct Solution {
@@ -337,7 +324,7 @@ mod tests {
 
     #[test]
     fn test_add_binary() {
-        assert_eq!(Solution::add_binary("10111111111".into(), "010101".into()).as_str(), "101101010100");
+        assert_eq!(Solution::add_binary("10111111111".into(), "010101".into()).as_str(), "11000010100");
     }
 
     #[test]
