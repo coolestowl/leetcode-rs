@@ -1,3 +1,5 @@
+use core::num;
+
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
@@ -311,6 +313,33 @@ impl Solution {
 
         result
     }
+
+    pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
+        if nums.len() == 0 || nums.iter().sum::<i32>() < target {
+            return 0;
+        }
+
+        let mut result = nums.len();
+
+        let (mut left, mut right) = (0, 0);
+        let mut sum = nums[left..=right].iter().sum::<i32>();
+        while left <= right && right < nums.len() {
+            if sum >= target {
+                result = std::cmp::min(result, right - left + 1);
+                sum -= nums[left];
+                left += 1;
+            } else {
+                if right + 1 == nums.len() {
+                    break;
+                }
+
+                right += 1;
+                sum += nums[right];
+            }
+        }
+
+        result as i32
+    }
 }
 
 #[cfg(test)]
@@ -346,5 +375,11 @@ mod tests {
     #[test]
     fn test_three_sum() {
         assert_eq!(Solution::three_sum(vec![-1,0,1,2,-1,-4]), vec![vec![-1,-1,2], vec![-1, 0, 1]]);
+    }
+
+    #[test]
+    fn test_min_sub_array_len() {
+        assert_eq!(Solution::min_sub_array_len(7, vec![2,3,1,2,4,3]), 2);
+        assert_eq!(Solution::min_sub_array_len(4, vec![1,4,4]), 1);
     }
 }
