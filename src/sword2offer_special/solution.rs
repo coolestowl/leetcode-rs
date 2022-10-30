@@ -1,4 +1,5 @@
 use core::num;
+use std::{hash::Hash, collections::HashMap};
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -339,6 +340,20 @@ impl Solution {
         }
 
         result as i32
+    }
+
+    pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let mut mp = std::collections::HashMap::new();
+        mp.insert(0, 1);
+
+        let (mut sum, mut result) = (0, 0);
+        for i in 0..nums.len() {
+            sum += nums[i];
+            result += mp.get(&(sum-k)).unwrap_or(&0);
+            mp.insert(sum, mp.get(&sum).unwrap_or(&0)+1);
+        }
+
+        result
     }
 }
 
